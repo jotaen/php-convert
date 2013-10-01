@@ -1,6 +1,6 @@
 <?php
 
-class base {
+class Base {
     private $base;
     private $length;
     private $arr;
@@ -14,21 +14,30 @@ class base {
     public function arr() {return $this->arr;}
 }
 
+function base ($base) {
+    return new Base($base);
+}
+
 function convert($input,$from,$to) {
+    // stringify, then split input:
+    $input = str_split((string)$input);
+    $l = count($input);
     // basic setup
     $default = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_./+*#,;:!?"\'@$%&()=[]{}<>|';
     if (is_int($from)) {
-        if ($from<0) trigger_error('convert() Second parameter must be positive.',E_USER_ERROR);
-        if ($from>strlen($default)) trigger_error('convert() Second parameter cannot be bigger than 90, which is the length of default base.',E_USER_ERROR);
-        $from = new base(substr($default,0,$from));
+        if ($from<=1) throw new Exception('convert() Second parameter must be greather than 1.');
+        if ($from>strlen($default)) throw new Exception('convert() Second parameter cannot be bigger than '.strlen($default).', which is the length of default base.');
+        $from = new Base(substr($default,0,$from));
     }
     if (is_int($to)) {
-        if ($to<0) trigger_error('convert() Third parameter must be positive.',E_USER_ERROR);
-        if ($to>strlen($default)) trigger_error('convert() Third parameter cannot be bigger than 90, which is the length of default base.',E_USER_ERROR);
-        $to = new base(substr($default,0,$to));
+        if ($to<=1) throw new Exception('convert() Third parameter must be greater than 1.');
+        if ($to>strlen($default)) throw new Exception('convert() Third parameter cannot be bigger than '.strlen($default).', which is the length of default base.');
+        $to = new Base(substr($default,0,$to));
     }
+    if ($from->length()<=1||$to->length()<=1) {throw new Exception('convert() Don’t accept trivial bases. Base must contain two or more chars.');}
+    // ensure, $input matches $from-base:
+    if (count(array_intersect($input,$from->arr())) != $l) {throw new Exception('convert() Input must be subset of first base!');};
     // to base 10:
-    $l = strlen($input);
     $dec = strpos($from,$input[0]);
     for($i=1 ; $i<$l ; $i++) {
         $dec = $from->length() * $dec + strpos($from,$input[$i]);
