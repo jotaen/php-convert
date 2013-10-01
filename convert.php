@@ -39,26 +39,26 @@ function convert($input,$from,$to) {
     // basic setup
     $default = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_./+*#,;:!?"\'@$%&()=[]{}<>|';
     if (is_int($from)) {
-        if ($from<1) throw new Exception('convert() Second parameter must be greather than 0, otherwise base is empty.');
-        if ($from>strlen($default)) throw new Exception('convert() Second parameter cannot be bigger than '.strlen($default).', which is the length of default base.');
+        if ($from<1) throw new Exception('convert() : Second parameter must be greather than 0, otherwise base is empty.');
+        if ($from>strlen($default)) throw new Exception('convert() : Second parameter cannot be bigger than '.strlen($default).', which is the length of default base.');
         $from = new Base(substr($default,0,$from));
     }
     if (is_int($to)) {
-        if ($to<1) throw new Exception('convert() Third parameter must be greater than 0, otherwise base is empty.');
-        if ($to>strlen($default)) throw new Exception('convert() Third parameter cannot be bigger than '.strlen($default).', which is the length of default base.');
+        if ($to<1) throw new Exception('convert() : Third parameter must be greater than 0, otherwise base is empty.');
+        if ($to>strlen($default)) throw new Exception('convert() : Third parameter cannot be bigger than '.strlen($default).', which is the length of default base.');
         $to = new Base(substr($default,0,$to));
     }
-    if ($from->length()<1||$to->length()<1) {throw new Exception('convert() Don’t accept empty bases. Base must contain one or more chars.');}
+    if ($from->length()<1||$to->length()<1) {throw new Exception('convert() : Don’t accept empty bases. Base must contain one or more chars.');}
     // ensure, $input matches $from-base:
-    if (count(array_intersect($input,$from->arr())) != $l) {throw new Exception('convert() Input must be subset of first base!');};
+    if (count(array_intersect($input,$from->arr())) != $l) {throw new Exception('convert() : Input must be subset of first base!');};
     // skip trivial conversions:
-    if ($from->length()==1) { return count($input)-1; }
     if ($from==$to) return implode('',$input);
     // to base 10:
     $dec = strpos($from,$input[0]);
     for($i=1 ; $i<$l ; $i++) {
         $dec = $from->length() * $dec + strpos($from,$input[$i]);
     }
+    if ($from->length()==1) { $dec=$l-1; }
     if ($to=='0123456789') {return $dec;}
     // skip trivial conversion:
     if ($to->length()==1) { return str_repeat($to->arr()[0],$dec+1); }
