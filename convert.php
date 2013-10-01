@@ -1,4 +1,18 @@
 <?php
+/**
+ *
+ *
+ *
+ *  php-convert
+ *
+ *
+ *  by Jan Heuermann
+ *  <jan@jotaen.net>
+ *  www.jotaen.net
+ *
+ *  Licence: Creative Commons BY 3.0
+ *
+ */
 
 class Base {
     private $base;
