@@ -31,7 +31,7 @@ Examples
         
         $from = base('ab#cd23f7*#89slk+');
         $to   = base('.,-;:_');
-        echo convert('d7+2*f#aks', $from, 42);
+        echo convert('d7+2*f#aks', $from, $to);
         // output: ,._.;:;::_;_;.;_
 
 
