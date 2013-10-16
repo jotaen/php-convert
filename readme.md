@@ -38,6 +38,12 @@ Examples
 Documentation
 -------------
 
+To get ready, just include the file [convert.php](convert.php):
+
+    <?php
+        require('convert.php');
+    ?>
+
 The function expects three parameters:
 
     convert($input, $from, $to);
