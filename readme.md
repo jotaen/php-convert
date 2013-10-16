@@ -128,7 +128,7 @@ You could also wrap the function call in a try/catch-statement. If an exception 
 Unit-Tests
 ----------
 
-For running the testsuite ([tests.php](tests.php)) you need to provide my [php-testsuite](https://github.com/jotaen/php-testsuite). You can, however, view the output also [here](http://code.jotaen.net/exec/php-convert_base/tests.php).
+For running the testsuite ([tests.php](tests.php)) you need to provide my [php-testsuite](https://github.com/jotaen/php-testsuite). You can, however, view the output also [here](http://code.jotaen.net/exec/php-convert/tests.php).
 
 
 License
