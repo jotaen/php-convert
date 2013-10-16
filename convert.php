@@ -1,11 +1,26 @@
 <?php
 /**
- * php-convert
+ *  php-convert
  *
+ *  Copyright 2013 Jan Heuermann
+ *  http://jotaen.net  •  <jan@jotaen.net>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
+
 /**
- *  Base object
+ *  Class for representing a base
  */
 class Base {
     private $base;
@@ -55,6 +70,14 @@ function default_base($length) {
  *  arbitrary bases
  *  \param      (string)        The string you want to convert. It’s
  *                              recommended to always „stringify“ your input.
+ *  \param      (obj)/(int)     The base of the input string. If (int) is given,
+ *                              default_base() is invoked to create the base.
+ *  \param      (obj)/(int)     The destination base to convert to. If (int) is given,
+ *                              default_base() is invoked to create the base.
+ *  \exception                  Throws exceptions, if
+ *                              * input-string isn’t subset of input-base
+ *                              * one of the bases is empty
+ *                              * invalid input is provided for base-parameters
  */
 function convert($input,$from,$to) {
     // validate bases
