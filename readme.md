@@ -1,33 +1,37 @@
 php-convert
 ===========
 
-This is a tool for converting a number/string from and to an arbitrary base. You can not only convert dual into hex, decimal into octal or base36 into decimal, but you can rather make crazy things like converting this string `d7+2*f#aks` into base 42.
+This is a tool for converting a number/string from and to an arbitrary base. It’s able to do the basic stuff like converting dual into hex or decimal into octal and so on.
+But you can rather make crazy things like converting this string `d7+2*f#aks` into a base, which just contains the characters `.,-;:_`.
+
+Just convert, what you want!
 
 
 Examples
 --------
-* Convert `123` from base `10` (decimal) to base `16` (hexadecimal):
+* Let’s do some warm-up with a basic job: Convert `123` from base `10` (decimal) to base `16` (hexadecimal):
     
         echo convert(123, 10, 16);
         // output: 7b
 
-* Convert `'1011100'` from base `2` (dual) to base `36` (numbers and small letters):
+* That was easy. As well as this is: Convert `'1011100'` from base `2` (dual) to base `36` (numbers and lowercase letters):
         
         echo convert('1011100', 2, 36);
         // output: 2k
 
-* Define custom bases:
+* Now, let’s define some custom bases:
         
         $from = base('abcdefghijklmnopqrstuvwxyz');
         $to   = base('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
         echo convert('yippie', $from, $to);
         // output: YIPPIE
 
-* Do the crazy stuff:
+* And finally, do the crazy stuff:
         
         $from = base('ab#cd23f7*#89slk+');
+        $to   = base('.,-;:_');
         echo convert('d7+2*f#aks', $from, 42);
-        // output: 2dxyvyx5
+        // output: ,._.;:;::_;_;.;_
 
 
 Documentation
@@ -37,11 +41,13 @@ The function expects three parameters:
 
     convert($input, $from, $to);
 
-* `$input` The first is the input, which you want to convert. That could be either a decimal number or a string. So these are all fine: `33` `"100"` `'ff0011'` `'_*2i.1'`
-* `$from` Specify the base, in which the input string is delivered. This can be either an integer (then the built-in default-base is used). Or you pass a custom base with your own character-set. Read section „Bases“ below for details.
-* `$to` Specify the base, to which the input should be converted. (Same rules as `$from`).
+* `$input` A string, which you want to convert. (You can also input a decimal number, so writing `33` or `'33'` or `"33"` would be the same here.)
+* `$from` The base, in which the input string is delivered.
+  * This can be either an integer (then the built-in default-base is used).
+  * Or you pass a custom base with your own character-set. (Read section „Bases“ below for details.)
+* `$to` Specify the base, to which the input should be converted. (Same as `$from`).
 
-**Important!** The task of input-validation is up to you! If you pass invalid parameters, exceptions will be thrown. Read section „Input validation“ below!
+**Important!** The task of input-validation is up to you! Make sure, the input-string is subset of the first base and the bases itself are valid. If not, exceptions will be thrown. Read section „Input validation“ below for further explanation!
 
 
 Bases
@@ -49,7 +55,7 @@ Bases
 You can either use the built-in default base, or you create a custom base.
 
 ### Default base ###
-The default contains the following 90 chars (in this order):
+The default base contains the following 90 chars (in this order):
 
 `0` `1` `2` `3` `4` `5` `6` `7` `8` `9` `a` `b` `c` `d` `e` `f` `g` `h` `i` `j` `k` `l` `m` `n` `o` `p` `q` `r` `s` `t` `u` `v` `w` `x` `y` `z` `A` `B` `C` `D` `E` `F` `G` `H` `I` `J` `K` `L` `M` `N` `O` `P` `Q` `R` `S` `T` `U` `V` `W` `X` `Y` `Z` `-` `_` `.` `/` `+` `*` `#` `,` `;` `:` `!` `?` `"` `'` `@` `$` `%` `&` `(` `)` `=` `[` `]` `{` `}` `<` `>` `|`
 
@@ -59,14 +65,14 @@ The convert-function will automatically use this default base, if you don’t sp
     convert('1az7r', 32, 62); // result: 9cbR
     convert(10001011, 2, 8);  // result: 213
 
-You can also create the default bases as objects:
+You can also create the default bases as distinct objects:
 
     $from = default_base(10);
     $to   = default_base(16);
     convert(123, $from, $to);
     // result: 7b
 
-The value-range for default bases is from 1 to 90. (If you break this range, an exception will be thrown.)
+The value-range for default bases is from 1 to 90. (If you break this range, an exception will be thrown!)
 
 
 ### Custom bases ###
@@ -86,17 +92,18 @@ You can write this, of course, also in a single line:
 Input validation
 ----------------
 
-The convert-function is able to throw exceptions. The reason is, that base-conversions aren’t trivial and there are a few things which can go wrong. Think of that:
+The convert-function is able to throw PHP-exceptions. The reason is, that base-conversions aren’t trivial and there are a few things which can go wrong. Think of that:
 
-    convert(998, 8, 10);
-    convert('Hrg17', 62, 0);
+    convert(1378, 8, 10);
+    convert('Hrg17', 0, 16);
     convert('Hrg17', 62, base(''));
 
-What’s wrong here? Well, in the first example you specify `998` to be an octal value, but none of its digits are defined in the octal-system (which consists of chars `01234567`). In the second and third example, the destination-bases doesn’t contain any characters, which is invalid.
+What’s wrong here? Well, in the first example you specify `1378` to be an octal value, but the value itself isn’t subset of the octal-base (which consists of chars `01234567`). So the digit `8` is not defined in the octal-system.
+In the second and third example, one of the bases are empty. And an empty base, which doesn’t contain any characters, is obviously invalid.
 In those cases, the function will throw an exception. (If you are unfamiliar with the concept of exceptions, read [this](http://php.net/manual/en/language.exceptions.php). In brief: Unhandled exceptions can cause your script to be terminated!)
-Especially when dealing with externally defined variables, you *have to* validate all of the input before processing it!
+Especially when dealing with externally defined variables, you *have to* validate all of the input before processing it! There are two ways to deal with that:
 
-### Manually check input ###
+### 1. Check input manually ###
 When you create a base, you can call the `check_subset` method to check, whether all chars of some input-string are contained in this base.
 
     $input = 'Hello';
@@ -108,12 +115,12 @@ When you create a base, you can call the `check_subset` method to check, whether
         echo 'Error!';
     }
 
-By the way: If you want to use the default base, you can create them this way:
+By the way: A base-object of the default base is created like so:
 
     $from = default_base(10);
 
-### Use try/catch ###
-You could also wrap the function call in a try/catch-statement. If an exception is thrown in the try-block, the catch-block will be invoked, where you can handle the exception.
+### 2. Use try/catch ###
+You could also wrap the function call in a try/catch-statement. If any exception is thrown in the try-block, the catch-block will be invoked, where you can handle the exception.
 
     try {
         $input = 'Hello';
