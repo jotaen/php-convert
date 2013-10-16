@@ -59,7 +59,7 @@ $f('feabe',base('abcdef'),base('012345')) ['==']= 54014;
 //
 // These must throw
 //
-// default-base <= 1 not allowed
+// default-base <= 0 not allowed
 $f('55',10,-8)      ['throw'];
 $f('55',0,10)       ['throw'];
 // default-base > 90 not allowed 
