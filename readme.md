@@ -1,80 +1,139 @@
 php-convert
 ===========
 
-
-This is a tool for converting a number/string from and to an arbitrary basis. You can not only convert dual->hex or decimal->octal or base32->decimal, but you can rather make crazy things like converting this string `d7+2*f#aks` into base 7.
-
-Please take the time to read and understand this readme complete in order to avoid suffering surprises.
+This is a tool for converting a number/string from and to an arbitrary base. You can not only convert dual to hex or decimal to octal or base36 to decimal, but you can rather make crazy things like converting this string `d7+2*f#aks` into base 7.
 
 
-# Example #
+Examples
+--------
+* Convert `123` from base `10` (decimal) to base `16` (hexadecimal):
+    
+        echo convert(123, 10, 16);
+        // output: 7b
+
+* Convert `'1011100'` from base `2` (dual) to base `36` (numbers and small letters):
+        
+        echo convert('1011100', 2, 36);
+        // output: 2k
+
+* Define custom bases:
+        
+        $from = base('abcdefghijklmnopqrstuvwxyz');
+        $to   = base('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+        echo convert('yippie', $from, $to);
+        // output: YIPPIE
+
+* Do the crazy stuff:
+        
+        $from = base('ab#cd23f7*#89slk+');
+        echo convert('d7+2*f#aks', $from, 42);
+        // output: 2dxyvyx5
 
 
+Documentation
+-------------
 
-# Function signature #
+The function expects three parameters:
 
-The functions expects three parameters:
+    convert($input, $from, $to);
 
-    convert($input, $from_base, $to_base);
+* `$input` The first is the input, which you want to convert. That could be either a decimal number or a string. So these are all fine: `33` `"100"` `'ff0011'` `'_*2i.1'`
+* `$from` Specify the base, in which the input string is delivered. This can be either an integer (then the built-in default-base is used). Or you pass a custom base with your own character-set. Read section „Bases“ below for details.
+* `$to` Specify the base, to which the input should be converted. (Same rules as `$from`).
 
-* `$input` The first is the input, which should be converted. That could be either a decimal number or a string. So values like `33`, `"33"`, `'33'`, `'fU.*3'` are all fine.
-
-* `$from_base` Specify the base, in which the input string is delivered. This can be either an integer (then the function uses the built-in default-base). Or you pass a `Base`-object, in which you specify a custom base (see below). For most cases, the default-base will be suitable – the range of allowed values is 1 to 90.
-
-* `$to_base` Specify the base, to which the input should be converted. (Same rules as `$from_base`).
-
-By the way: the task of input-validation is up to you! If you pass invalid parameters, the function will throw an exception, which can lead your script to terminate if you aren’t prepared!
+**Important!** The task of input-validation is up to you! If you pass invalid parameters, exceptions will be thrown. Read section „Input validation“ below!
 
 
-# Default base #
+Bases
+-----
+You can either use the built-in default base, or you create a custom base.
 
-The default base is:
+### Default base ###
+The default contains the following 90 chars (in this order):
 
-    0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_./+*#,;:!?"\'@$%&()=[]{}<>|
+`0` `1` `2` `3` `4` `5` `6` `7` `8` `9` `a` `b` `c` `d` `e` `f` `g` `h` `i` `j` `k` `l` `m` `n` `o` `p` `q` `r` `s` `t` `u` `v` `w` `x` `y` `z` `A` `B` `C` `D` `E` `F` `G` `H` `I` `J` `K` `L` `M` `N` `O` `P` `Q` `R` `S` `T` `U` `V` `W` `X` `Y` `Z` `-` `_` `.` `/` `+` `*` `#` `,` `;` `:` `!` `?` `"` `\` `'` `@` `$` `%` `&` `(` `)` `=` `[` `]` `{` `}` `<` `>` `|`
 
-It contains 91 chars, so which is thus the maximum value for the function call:
+The convert-function will automatically use this default base, if you don’t specify your own base:
 
-    convert(123, 10, 90);
+    convert(123, 10, 16);     // result: 7b
+    convert('1az7r', 32, 62); // result: 9cbR
+    convert(10001011, 2, 8);  // result: 213
+
+You can also create the default bases as objects:
+
+    $from = default_base(10);
+    $to   = default_base(16);
+    convert(123, $from, $to);
+    // result: 7b
+
+The value-range for default bases is from 1 to 90. (If you break this range, an exception will be thrown.)
 
 
-# Custom bases #
+### Custom bases ###
 
-If you want to use a different base for input and/or output, you have to specify the bases yourself.
+If you want to use a different base for input and/or output, you can create your own bases with custom character-sets:
 
-    $from_base = base('abcdefghijklmno');
-    $to_base   = base('12345');
-    echo convert('hello', $from_base, $to_base);
+    $from = base('abcdefghijklmno');
+    $to   = base('8|&ag2');
+    convert('hello', $from, $to);
+    // result: ||2a2&&2
 
 You can write this, of course, also in a single line:
 
-    echo convert('hello', base('abcdefghijklmno'), base('12345'));
+    convert('hello', base('abcdefghijklmno'), base('8|&ag2'));
 
 
-# Three things you NEED to know! #
+Input validation
+----------------
 
-1. This function is able to throw exceptions. The reason is, that base-convertions aren’t trivial and there are a few things which can go wrong. Think of that:
+The convert-function is able to throw exceptions. The reason is, that base-conversions aren’t trivial and there are a few things which can go wrong. Think of that:
 
-    echo convert(978, 16, 10);
-    echo convert('Hrg17', 62, 0);
+    convert(998, 8, 10);
+    convert('Hrg17', 62, 0);
+    convert('Hrg17', 62, base(''));
 
-You specify '978' to be a hex-value, but none of the chars are defined in the hex-system. In the second example, the destination-base is zero, which is impossible, because an empty base contains no characters.
-In those cases, the function will throw an exception. And if you don’t handle them, your script will be terminated. To avoid this, you should wrap your function call in a try/catch-statement:
+What’s wrong here? Well, in the first example you specify `998` to be an octal value, but none of its digits are defined in the octal-system (which consists of chars `01234567`). In the second and third example, the destination-bases doesn’t contain any characters, which is invalid.
+In those cases, the function will throw an exception. (If you are unfamiliar with the concept of exceptions, read [this](http://php.net/manual/en/language.exceptions.php). In brief: Unhandled exceptions can cause your script to be terminated!)
+Especially when dealing with externally defined variables, you *have to* validate all of the input before processing it!
+
+### Manually check input ###
+When you create a base, you can call the `check_subset` method to check, whether all chars of some input-string are contained in this base.
+
+    $input = 'Hello';
+    $from  = base('abcdef');
+    if ($from->check_subset($input)) {
+        echo convert($input, $from, 10);
+    }
+    else {
+        echo 'Error!';
+    }
+
+By the way: If you want to use the default base, you can create them this way:
+
+    $from = default_base(10);
+
+### Use try/catch ###
+You could also wrap the function call in a try/catch-statement. If an exception is thrown in the try-block, the catch-block will be invoked, where you can handle the exception.
 
     try {
-        $value = $_GET['user_input'];
-        echo convert($value, 16, 10);
+        $input = 'Hello';
+        $from  = base('abcdef');
+        echo convert($input, $from, 10);
     }
     catch(Exception $e) {
-        // this catch-block only is inoked, if something goes wrong
         echo $e;
     }
 
-In particular, this is important, when you call the convert function with variables.
-If you make function-calls with hardcoded numbers/strings, e.g.
 
-    convert(123, 10, 2);
+Unit-Tests
+----------
 
-you don’t necessarily need to do try/catch, because you would be able to test it before.
+For running the testsuite ([tests.php](tests.php)) you need to provide my [php-testsuite](https://github.com/jotaen/php-testsuite). You can, however, view the output also [here](http://code.jotaen.net/exec/php-convert_base/tests.php).
 
 
-2. I developed this tool on a private basis just for fun. I wrote a few testcases, to ensure it works as I expect it to work. Nevertheless, I grant/provide any warranties, not in the least! Use this on your own risk.
+License
+-------
+
+Copyright 2013 Jan Heuermann
+
+Apache 2.0, see [License-file](LICENSE)
