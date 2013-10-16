@@ -2,6 +2,7 @@ php-convert
 ===========
 
 This is a tool for converting a number/string from and to an arbitrary base. It’s able to do the basic stuff like converting dual into hex or decimal into octal and so on.
+
 But you can rather make crazy things like converting this string `d7+2*f#aks` into a base, which just contains the characters `.,-;:_`.
 
 Just convert, what you want!
@@ -9,12 +10,12 @@ Just convert, what you want!
 
 Examples
 --------
-* Let’s do some warm-up with a basic job: Convert `123` from base `10` (decimal) to base `16` (hexadecimal):
+* Let’s do some warm-up with a basic job: Convert `123` from base 10 (decimal) to base 16 (hexadecimal):
     
         echo convert(123, 10, 16);
         // output: 7b
 
-* That was easy. As well as this is: Convert `'1011100'` from base `2` (dual) to base `36` (numbers and lowercase letters):
+* That was easy. As well as this is: Convert `'1011100'` from base 2 (dual) to base 36 (numbers and lowercase letters):
         
         echo convert('1011100', 2, 36);
         // output: 2k
@@ -99,7 +100,9 @@ The convert-function is able to throw PHP-exceptions. The reason is, that base-c
     convert('Hrg17', 62, base(''));
 
 What’s wrong here? Well, in the first example you specify `1378` to be an octal value, but the value itself isn’t subset of the octal-base (which consists of chars `01234567`). So the digit `8` is not defined in the octal-system.
+
 In the second and third example, one of the bases are empty. And an empty base, which doesn’t contain any characters, is obviously invalid.
+
 In those cases, the function will throw an exception. (If you are unfamiliar with the concept of exceptions, read [this](http://php.net/manual/en/language.exceptions.php). In brief: Unhandled exceptions can cause your script to be terminated!)
 Especially when dealing with externally defined variables, you *have to* validate all of the input before processing it! There are two ways to deal with that:
 
