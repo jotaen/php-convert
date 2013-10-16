@@ -1,7 +1,7 @@
 php-convert
 ===========
 
-This is a tool for converting a number/string from and to an arbitrary base. You can not only convert dual to hex or decimal to octal or base36 to decimal, but you can rather make crazy things like converting this string `d7+2*f#aks` into base 7.
+This is a tool for converting a number/string from and to an arbitrary base. You can not only convert dual into hex, decimal into octal or base36 into decimal, but you can rather make crazy things like converting this string `d7+2*f#aks` into base 42.
 
 
 Examples
@@ -51,7 +51,7 @@ You can either use the built-in default base, or you create a custom base.
 ### Default base ###
 The default contains the following 90 chars (in this order):
 
-`0` `1` `2` `3` `4` `5` `6` `7` `8` `9` `a` `b` `c` `d` `e` `f` `g` `h` `i` `j` `k` `l` `m` `n` `o` `p` `q` `r` `s` `t` `u` `v` `w` `x` `y` `z` `A` `B` `C` `D` `E` `F` `G` `H` `I` `J` `K` `L` `M` `N` `O` `P` `Q` `R` `S` `T` `U` `V` `W` `X` `Y` `Z` `-` `_` `.` `/` `+` `*` `#` `,` `;` `:` `!` `?` `"` `\` `'` `@` `$` `%` `&` `(` `)` `=` `[` `]` `{` `}` `<` `>` `|`
+`0` `1` `2` `3` `4` `5` `6` `7` `8` `9` `a` `b` `c` `d` `e` `f` `g` `h` `i` `j` `k` `l` `m` `n` `o` `p` `q` `r` `s` `t` `u` `v` `w` `x` `y` `z` `A` `B` `C` `D` `E` `F` `G` `H` `I` `J` `K` `L` `M` `N` `O` `P` `Q` `R` `S` `T` `U` `V` `W` `X` `Y` `Z` `-` `_` `.` `/` `+` `*` `#` `,` `;` `:` `!` `?` `"` `'` `@` `$` `%` `&` `(` `)` `=` `[` `]` `{` `}` `<` `>` `|`
 
 The convert-function will automatically use this default base, if you don’t specify your own base:
 
