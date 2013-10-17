@@ -3,7 +3,7 @@ php-convert
 
 This is a tool for converting a number/string from and to an arbitrary base. It’s able to do the basic stuff like converting dual into hex or decimal into octal and so on.
 
-But you can rather make crazy things like converting this string `d7+2*f#aks` into a base, which just contains the characters `.,-;:_`.
+But you can rather make crazy things like converting this string `d7+2*f#aks` into a base, which just contains the characters `.` `,` `-` `;` `:` `_`.
 
 Just convert, what you want!
 
@@ -144,7 +144,7 @@ You could also wrap the function call in a try/catch-statement. If any exception
 Unit-Tests
 ----------
 
-For running the testsuite ([tests.php](tests.php)) you need to provide my [php-testsuite](https://github.com/jotaen/php-testsuite). You can, however, view the output also [here](http://code.jotaen.net/exec/php-convert/tests.php).
+For running the testsuite ([tests.php](tests.php)) you need to provide my [php-testsuite](https://github.com/jotaen/php-testsuite). Anyway, you can also view the output [here](http://code.jotaen.net/exec/php-convert/tests.php).
 
 
 License
